@@ -1,2 +1,2 @@
 # Hive Scripts
-This Repo has some sample Hive scripts and use cases
+This Repo has some sample Hive scripts to use
