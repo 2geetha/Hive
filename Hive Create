@@ -1,0 +1,50 @@
+-- create managed/external table
+
+create table  retail_managed (
+category string,
+sub_category string,
+plant string,
+quantity double
+)ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+
+-- create unmanaged external table 
+create external table  retail_external (
+category string,
+sub_category string,
+plant string,
+quantity double
+)ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+location '/data/retail/';
+
+
+-- partitioned table, partitioned by category 
+-- this subsetting of data helps improve query performance on large data
+-- 2 properties that needs to be set in hive to perform partitioning
+
+set hive.exec.dynamic.partition.mode=nonstrict/(strict);  
+set hive.exec.dynamic.partition=true;
+
+create table retail_part (
+sub_category string,
+plant string,
+quantity double
+)partitioned by(category string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
+-- partitioned table with buckets, partitioned by category and bucketed by plant
+-- this subsetting of data helps improve query performance on large data
+-- hive bucketing should be set to true
+
+set hive.exec.dynamic.partition.mode=nonstrict/(strict);  
+set hive.exec.dynamic.partition=true;
+set hive.enforce.bucketing=true;
+
+create table retail_part_buckt (
+sub_category string,
+plant string,
+quantity double
+)partitioned by(category string)
+clustered by(plant) into 10 buckets
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+
